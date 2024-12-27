@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Fire Prediction</title>
+</head>
+<body>
+
+    <h1>Forest Fire Prediction</h1>
+    <form id="predictForm">
+        <label for="area">Area: </label>
+        <input type="text" id="area" name="area"><br><br>
+
+        <label for="oxygen">Oxygen: </label>
+        <input type="text" id="oxygen" name="oxygen"><br><br>
+
+        <label for="temperature">Temperature: </label>
+        <input type="text" id="temperature" name="temperature"><br><br>
+
+        <label for="humidity">Humidity: </label>
+        <input type="text" id="humidity" name="humidity"><br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    <h2 id="predictionResult">Prediction: </h2>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#predictForm").on("submit", function(event) {
+                event.preventDefault();  
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '/predict',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.error) {
+                            $('#predictionResult').text(response.error);
+                        } else {
+                            $('#predictionResult').text('Prediction: ' + response.prediction);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#predictionResult').text('An error occurred: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
