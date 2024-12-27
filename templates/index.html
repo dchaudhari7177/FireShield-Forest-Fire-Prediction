@@ -3,28 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forest Fire Prediction</title>
+    <title>FireShield - Forest Fire Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
-    <h1>Forest Fire Prediction</h1>
-    <form id="predictForm">
-        <label for="area">Area: </label>
-        <input type="text" id="area" name="area"><br><br>
+    <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+        <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">FireShield</h1>
+        <h2 class="text-xl text-center text-gray-700 mb-6">Forest Fire Prediction System</h2>
 
-        <label for="oxygen">Oxygen: </label>
-        <input type="text" id="oxygen" name="oxygen"><br><br>
+        <form id="predictForm" class="space-y-4">
+            <div>
+                <label for="area" class="block text-lg font-medium text-gray-700">Area:</label>
+                <input type="text" id="area" name="area" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter area">
+            </div>
+            
+            <div>
+                <label for="oxygen" class="block text-lg font-medium text-gray-700">Oxygen:</label>
+                <input type="text" id="oxygen" name="oxygen" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter oxygen level">
+            </div>
 
-        <label for="temperature">Temperature: </label>
-        <input type="text" id="temperature" name="temperature"><br><br>
+            <div>
+                <label for="temperature" class="block text-lg font-medium text-gray-700">Temperature:</label>
+                <input type="text" id="temperature" name="temperature" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter temperature">
+            </div>
 
-        <label for="humidity">Humidity: </label>
-        <input type="text" id="humidity" name="humidity"><br><br>
+            <div>
+                <label for="humidity" class="block text-lg font-medium text-gray-700">Humidity:</label>
+                <input type="text" id="humidity" name="humidity" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter humidity level">
+            </div>
 
-        <input type="submit" value="Predict">
-    </form>
+            <div class="flex justify-center">
+                <input type="submit" value="Predict" class="w-full sm:w-auto bg-blue-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition duration-300">
+            </div>
+        </form>
 
-    <h2 id="predictionResult">Prediction: </h2>
+        <h2 id="predictionResult" class="mt-6 text-xl font-semibold text-center text-gray-800">Prediction: </h2>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
