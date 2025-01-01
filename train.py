@@ -31,6 +31,11 @@ y = data['Fire Occurrence']
 if not pd.api.types.is_numeric_dtype(y):
     raise ValueError("The target column 'Fire Occurrence' contains non-numeric values. Please clean the data.")
 
+fire_count = y.sum()
+total_count = len(y)
+fire_occurrence_percentage = (fire_count / total_count) * 100
+print(f"Percentage of fire occurrences in the dataset: {fire_occurrence_percentage:.2f}%")
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = RandomForestClassifier()

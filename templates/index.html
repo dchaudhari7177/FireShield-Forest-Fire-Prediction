@@ -46,9 +46,9 @@
         $(document).ready(function() {
             $("#predictForm").on("submit", function(event) {
                 event.preventDefault();  
-
+    
                 var formData = $(this).serialize();
-
+    
                 $.ajax({
                     url: '/predict',
                     type: 'POST',
@@ -57,7 +57,10 @@
                         if (response.error) {
                             $('#predictionResult').text(response.error);
                         } else {
-                            $('#predictionResult').text('Prediction: ' + response.prediction);
+                            $('#predictionResult').html(
+                                'Prediction: ' + response.prediction + '<br>' +
+                                'Fire Occurrence Percentage: ' + response.fire_percentage + '%'
+                            );
                         }
                     },
                     error: function(xhr, status, error) {
@@ -67,6 +70,7 @@
             });
         });
     </script>
+    
 
 </body>
 </html>
