@@ -3,52 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FireShield - Forest Fire Prediction</title>
+    <title>FireShield - Advanced Forest Fire Prediction</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 
-    <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+    <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
         <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">FireShield</h1>
-        <h2 class="text-xl text-center text-gray-700 mb-6">Forest Fire Prediction System</h2>
+        <h2 class="text-xl text-center text-gray-700 mb-6">Forest Fire Risk Analysis System</h2>
 
+        <!-- Single Prediction Form -->
         <form id="predictForm" class="space-y-4">
             <div>
                 <label for="area" class="block text-lg font-medium text-gray-700">Area:</label>
                 <input type="text" id="area" name="area" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter area">
             </div>
-            
             <div>
                 <label for="oxygen" class="block text-lg font-medium text-gray-700">Oxygen:</label>
                 <input type="text" id="oxygen" name="oxygen" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter oxygen level">
             </div>
-
             <div>
                 <label for="temperature" class="block text-lg font-medium text-gray-700">Temperature:</label>
                 <input type="text" id="temperature" name="temperature" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter temperature">
             </div>
-
             <div>
                 <label for="humidity" class="block text-lg font-medium text-gray-700">Humidity:</label>
                 <input type="text" id="humidity" name="humidity" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Enter humidity level">
             </div>
-
             <div class="flex justify-center">
                 <input type="submit" value="Predict" class="w-full sm:w-auto bg-blue-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition duration-300">
             </div>
         </form>
 
-        <h2 id="predictionResult" class="mt-6 text-xl font-semibold text-center text-gray-800">Prediction: </h2>
+        <!-- Batch Prediction -->
+        <form id="batchForm" class="mt-8 space-y-4">
+            <label for="batchFile" class="block text-lg font-medium text-gray-700">Upload CSV for Batch Prediction:</label>
+            <input type="file" id="batchFile" name="batchFile" class="w-full p-3 border border-gray-300 rounded-lg">
+            <button type="submit" class="w-full sm:w-auto bg-green-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-green-700 transition duration-300">
+                Upload & Predict
+            </button>
+        </form>
+
+        <!-- Results -->
+        <div class="mt-10">
+            <h2 id="predictionResult" class="text-xl font-semibold text-center text-gray-800">Prediction:</h2>
+            <canvas id="predictionChart" class="mt-6"></canvas>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $("#predictForm").on("submit", function(event) {
-                event.preventDefault();  
-    
+                event.preventDefault();
                 var formData = $(this).serialize();
-    
+
                 $.ajax({
                     url: '/predict',
                     type: 'POST',
@@ -59,8 +69,9 @@
                         } else {
                             $('#predictionResult').html(
                                 'Prediction: ' + response.prediction + '<br>' +
-                                'Fire Occurrence Percentage: ' + response.fire_percentage + '%'
+                                'Fire Occurrence Confidence: ' + response.fire_percentage + '%'
                             );
+                            updateChart(response.fire_percentage);
                         }
                     },
                     error: function(xhr, status, error) {
@@ -68,9 +79,48 @@
                     }
                 });
             });
+
+            $("#batchForm").on("submit", function(event) {
+                event.preventDefault();
+                var formData = new FormData();
+                var file = $('#batchFile')[0].files[0];
+
+                if (!file) {
+                    alert('Please select a file.');
+                    return;
+                }
+
+                formData.append('file', file);
+
+                $.ajax({
+                    url: '/batch-predict',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response); // Display batch predictions in console or process as needed.
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred: ' + error);
+                    }
+                });
+            });
+
+            function updateChart(confidence) {
+                var ctx = document.getElementById('predictionChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Fire Occurrence', 'No Fire'],
+                        datasets: [{
+                            data: [confidence, 100 - confidence],
+                            backgroundColor: ['#FF4500', '#4682B4']
+                        }]
+                    }
+                });
+            }
         });
     </script>
-    
-
 </body>
 </html>
