@@ -35,7 +35,7 @@ def predict():
 
     result = {
         'prediction': 'Fire Occurrence' if prediction == 1 else 'No Fire',
-        'fire_percentage': round(prediction_proba[1] * 100, 2),  # Confidence for 'Fire Occurrence'
+        'fire_percentage': round(prediction_proba[1] * 100, 2),  
     }
 
     return jsonify(result)
